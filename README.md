@@ -67,12 +67,12 @@ When Starting a transaction we set the isolation level using `SET ISOLATION LEVE
 When talking about consistency in database we focus on 2 things:
 
 - Consistency in Data: Is what he have in disk consistent with the data model we have 
- - This is defined by the user (who designs the database model)
- - Referential Integrity: Foreign Key values should be consistent and equal across different tables
- - Atomicity: Ensuring that only completed transactions are comitted
- - Isolation: Ensuring that conficting transations don't cause inconsistent data 
+    - This is defined by the user (who designs the database model)
+    - Referential Integrity: Foreign Key values should be consistent and equal across different tables
+    - Atomicity: Ensuring that only completed transactions are comitted
+    - Isolation: Ensuring that conficting transations don't cause inconsistent data 
 
 - Consistency in Reads: Reads of data becomes inconsistent as we have multiple instances of snapshots, which become out of sync  
- - If a transaction commits a change, will a new transaction immediately see that change?   
- - Replicas and Primary which read and write to each other can be inconsistent
- - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again 
+    - If a transaction commits a change, will a new transaction immediately see that change?   
+    - Replicas and Primary which read and write to each other can be inconsistent
+    - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again 
