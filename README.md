@@ -61,3 +61,18 @@ When Starting a transaction we set the isolation level using `SET ISOLATION LEVE
 - Repeatable Read: This isolation level ensures that whenever a query reads a row, that record/row will remain unchanged for the rest of the transactions. Phantom reads can still sneak in with this isolation level.
 - Snapshot: As the name suggests, this isolation level provides us of a snapshot of the database from the moment of the transaction. So each query will only see changes that have been committed up to the start of the transaction. It eliminates all read phenomenas
 - Serializable: As the name suggests with this level of isolation, there is no more concurrency and each transaction is ran one after the other, making it very slow
+
+## Consistency
+
+When talking about consistency in database we focus on 2 things:
+
+- Consistency in Data: Is what he have in disk consistent with the data model we have 
+ - This is defined by the user (who designs the database model)
+ - Referential Integrity: Foreign Key values should be consistent and equal across different tables
+ - Atomicity: Ensuring that only completed transactions are comitted
+ - Isolation: Ensuring that conficting transations don't cause inconsistent data 
+
+- Consistency in Reads: Reads of data becomes inconsistent as we have multiple instances of snapshots, which become out of sync  
+ - If a transaction commits a change, will a new transaction immediately see that change?   
+ - Replicas and Primary which read and write to each other can be inconsistent
+ - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again 
