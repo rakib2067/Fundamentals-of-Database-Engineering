@@ -76,3 +76,14 @@ When talking about consistency in database we focus on 2 things:
     - If a transaction commits a change, will a new transaction immediately see that change?   
     - Replicas and Primary which read and write to each other can be inconsistent
     - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again 
+
+## Durability
+
+This involves the process of persisting writes made to the database in non-volatile memory
+i.e. If a transaction has been committed and the database crashed after, upon restarting we should be able to see that change
+
+Durability techniques:
+
+- WAL (Write Ahead Log) - We save all transactions go through the WAL which gets flushed to disk immediately. So when there is a crash we can visit this WAL and rebuild our data to the right state
+- Asynchronous snapshot - As we write, we keep everything in memory but then asynchronously in the background we snapshot everything to disk at once 
+- AOF (Append Only File) - Again only keeps tracks of changes then writes these 
