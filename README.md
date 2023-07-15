@@ -83,14 +83,6 @@ When talking about consistency in database we focus on 2 things:
 This involves the process of persisting writes made to the database in non-volatile memory
 i.e. If a transaction has been committed and the database crashed after, upon restarting we should be able to see that change
 
-OS Cache:
-
-- A write request in OS usually goes straight to the OS cache instead of to disk, as OS likes to batch the requests and flush all at once
-- This can lead to cases where writes are stored in cache, but the OS itself crashes
-  - In cases where the machine restarts without flushing to disk we will have a loss of data
-- There is a command `Fsync` OS which always forces writes to go to the disk
-  - Which again can be expensive and slow down commits
-
 Durability techniques:
 
 - WAL (Write Ahead Log) - We save all transactions go through the WAL which gets flushed to disk immediately. So when there is a crash we can visit this WAL and rebuild our data to the right state
@@ -100,3 +92,11 @@ Durability techniques:
 
 - Asynchronous snapshot - As we write, we keep everything in memory but then asynchronously in the background we snapshot everything to disk at once
 - AOF (Append Only File) - Again only keeps tracks of changes then writes these
+
+OS Cache:
+
+- A write request in OS usually goes straight to the OS cache instead of to disk, as OS likes to batch the requests and flush all at once
+- This can lead to cases where writes are stored in cache, but the OS itself crashes
+  - In cases where the machine restarts without flushing to disk we will have a loss of data
+- There is a command `Fsync` OS which always forces writes to go to the disk
+  - Which again can be expensive and slow down commits
