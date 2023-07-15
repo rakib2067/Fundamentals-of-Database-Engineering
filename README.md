@@ -66,24 +66,37 @@ When Starting a transaction we set the isolation level using `SET ISOLATION LEVE
 
 When talking about consistency in database we focus on 2 things:
 
-- Consistency in Data: Is what he have in disk consistent with the data model we have 
-    - This is defined by the user (who designs the database model)
-    - Referential Integrity: Foreign Key values should be consistent and equal across different tables
-    - Atomicity: Ensuring that only completed transactions are comitted
-    - Isolation: Ensuring that conficting transations don't cause inconsistent data 
+- Consistency in Data: Is what he have in disk consistent with the data model we have
 
-- Consistency in Reads: Reads of data becomes inconsistent as we have multiple instances of snapshots, which become out of sync  
-    - If a transaction commits a change, will a new transaction immediately see that change?   
-    - Replicas and Primary which read and write to each other can be inconsistent
-    - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again 
+  - This is defined by the user (who designs the database model)
+  - Referential Integrity: Foreign Key values should be consistent and equal across different tables
+  - Atomicity: Ensuring that only completed transactions are comitted
+  - Isolation: Ensuring that conficting transations don't cause inconsistent data
+
+- Consistency in Reads: Reads of data becomes inconsistent as we have multiple instances of snapshots, which become out of sync
+  - If a transaction commits a change, will a new transaction immediately see that change?
+  - Replicas and Primary which read and write to each other can be inconsistent
+  - Eventual Consistency: With replicas, as soon as all changes been synced, everything will become consistent again
 
 ## Durability
 
 This involves the process of persisting writes made to the database in non-volatile memory
 i.e. If a transaction has been committed and the database crashed after, upon restarting we should be able to see that change
 
+OS Cache:
+
+- A write request in OS usually goes straight to the OS cache instead of to disk, as OS likes to batch the requests and flush all at once
+- This can lead to cases where writes are stored in cache, but the OS itself crashes
+  - In cases where the machine restarts without flushing to disk we will have a loss of data
+- There is a command `Fsync` OS which always forces writes to go to the disk
+  - Which again can be expensive and slow down commits
+
 Durability techniques:
 
 - WAL (Write Ahead Log) - We save all transactions go through the WAL which gets flushed to disk immediately. So when there is a crash we can visit this WAL and rebuild our data to the right state
-- Asynchronous snapshot - As we write, we keep everything in memory but then asynchronously in the background we snapshot everything to disk at once 
-- AOF (Append Only File) - Again only keeps tracks of changes then writes these 
+
+  - Writing a lot of data to disks is expensive and slow
+  - Therefore, WAL (write-ahead-log-segments) which are a compressed version of changes are persisted by DBMSs
+
+- Asynchronous snapshot - As we write, we keep everything in memory but then asynchronously in the background we snapshot everything to disk at once
+- AOF (Append Only File) - Again only keeps tracks of changes then writes these
